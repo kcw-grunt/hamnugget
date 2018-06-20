@@ -17,12 +17,13 @@ router.get('/api/ham/status', (req, res) => {
 router.get('/api/ham/connect', (req, res) => {
   tnc.on('frame', (frame) => { 
     let packet = new ax25.Packet({ frame : frame }); 
-    res.send({response:console.log('src : ${packet.sourceCallsign}, dst : ${packet.destinationCallsign}, inf : ${packet.infoString}');
-    });
+    res.send({response:console.log('src : ${packet.sourceCallsign}')});
+    ////, dst : ${packet.destinationCallsign}, inf : ${packet.infoString}');
+    //});
   });
   
   tnc.on('error', (err) => {
-    console.log('error' + err);
+    console.log('ham nugget error' + err);
   });
 });
 
