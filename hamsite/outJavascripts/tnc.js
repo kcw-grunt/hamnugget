@@ -1,11 +1,11 @@
 
-
 function check_test(){
     console.log("It's working! :D");
     return "It's working really!";
 }
 
 function test_connect(){
+
     var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
         if (err) {
             return console.log('Error:', err.message);
@@ -21,12 +21,4 @@ function test_connect(){
             return console.log("Connect to SLAB_USB"); 
         }
     });
-}
-
-    
-
-
-
-
-
 }

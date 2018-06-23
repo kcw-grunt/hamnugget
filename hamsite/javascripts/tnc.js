@@ -1,6 +1,3 @@
-//ax25 = require("./index");
-//util = require("util");
-
 var myCallsign = "KM6TIG";
 var mySSID = 2;
 var tnc = new ax25.kissTNC(
@@ -16,17 +13,30 @@ function test_console(){
     console.log("It's working! :D");
 }
 
-function test_connect(){
-    console.log("Connect!!!!!!"); 
-}
-
-
-
 var sessions = {};
 
 function tnctest() {
 	console.log("It's working! TNC Test");
 } 
+
+function test_connect(){
+
+    var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
+        if (err) {
+            return console.log('Error:', err.message);
+        } else {
+            return console.log("Connected to USB0"); 
+        }
+    });
+
+    var port2 = new SerialPort('/dev/tty.SLAB_USBtoUART', function (err) {
+        if (err) {
+            return console.log('Error:', err.message);
+        } else {
+            return console.log("Connect to SLAB_USB"); 
+        }
+    });
+}
  
 // tnc.on(
 // 	"frame",
