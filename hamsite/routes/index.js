@@ -14,15 +14,15 @@ console.log(myCallsign);
  
 var serialPort = new SerialPort('/dev/ttyUSB0', {
  baudRate: 9600
-}, true);
- 
-serialPort.write("KISS ON \r\n", function(err, results) {
-      if (err) {
-        console.log('err ' + err);
-      }else{
-        console.log('results ' + results);
-      }
+}); 
+
+serialPort.write('KISS ON \r\n', function(err) {
+  if (err) {
+    return console.log('Error on write: ', err.message);
+  }
+  console.log('message written');
 });
+ 
   
 router.get('/api/hello', (req, res) => {
   res.send({ response: 'World' });
