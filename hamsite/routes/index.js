@@ -14,7 +14,7 @@ console.log(myCallsign);
  
 var serialPort = new SerialPort('/dev/ttyUSB0', {
  baudRate: 9600
-}, false);
+}, true);
  
  
 serialPort.open(function (error) {
