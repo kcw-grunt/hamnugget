@@ -9,6 +9,33 @@ var mySSID = 1;
 
 var sessions = {};
 
+console.log('TEST Loading Node index');
+console.log(myCallsign);
+ 
+var serialPort = new SerialPort('/dev/ttyUSB0', {
+ baudRate: 9600
+}, false);
+ 
+ 
+serialPort.open(function (error) {
+  if ( error ) {
+    console.log('failed to open: '+error);
+  } else {
+    console.log('open');
+    serialPort.on('data', function(data) {
+      console.log('data received: ' + data);
+    });
+    serialPort.write("ls\n", function(err, results) {
+      console.log('err ' + err);
+      console.log('results ' + results);
+    });
+    serialPort.write("KISS ON \r\n", function(err, results) {
+      console.log('err ' + err);
+      console.log('results ' + results);
+    });
+  }
+});
+  
 router.get('/api/hello', (req, res) => {
   res.send({ response: 'World' });
 });
@@ -42,20 +69,7 @@ router.get('/api/ham/connect', (req, res) => {
 });
 
 router.get('/api/ham/echo', (req, res) => {
- 
-  $.ajax({
-    type: "POST",
-    url: "/D72.py",
-    data: { param: input },
-    success: callbackFunc
-  });
-
-  function callbackFunc(response) {
-    // do something with the response
-    console.log(response);
-  }
-
-
+   
   var tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
       baudRate : 9600

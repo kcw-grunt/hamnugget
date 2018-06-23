@@ -22,3 +22,18 @@ function test_connect(){
         }
     });
 }
+
+
+function kiss_on() {
+    
+    var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
+        if (err) {
+            return console.log('Real Error:', err.message);
+        } else {
+            return console.log("Connected to USB0"); 
+        }
+    });
+
+    port1.write('KISS ON \r\n');
+
+}

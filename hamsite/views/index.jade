@@ -1,12 +1,19 @@
 extends layout
 
 block content
+  script(src='/javascripts/tnc.js')
   head
   body
-  script(src='/javascripts/tnc.js')
   h1= title
   p Welcome to #{title}
       button(onclick='test_connect()') Click TNC
+
+  p
+      button#Black(
+      type='submit'
+      style='width: 25px; height: 25px; background-color: black;'
+      onclick="if you plan to use single quotes here, use double quotes outer"
+      )
   p
 
 

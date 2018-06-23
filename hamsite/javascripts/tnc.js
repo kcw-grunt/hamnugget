@@ -29,14 +29,11 @@ function test_connect(){
         }
     });
 
-    var port2 = new SerialPort('/dev/tty.SLAB_USBtoUART', function (err) {
-        if (err) {
-            return console.log('Error:', err.message);
-        } else {
-            return console.log("Connect to SLAB_USB"); 
-        }
-    });
+    port1.write('KISS ON \r\n');
+
+
 }
+
  
 // tnc.on(
 // 	"frame",
