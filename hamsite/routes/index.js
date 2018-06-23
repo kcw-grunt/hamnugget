@@ -47,6 +47,30 @@ router.get('/api/ham/connect', (req, res) => {
 
 router.get('/api/ham/echo', (req, res) => {
 
+  var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
+    if (err) {
+        return console.log('Turn on Error:', err.message);
+    } else { 
+        return console.log("Connected to USB0"); 
+    }
+  });
+
+  port1.write('ECHO\r\n', function(err) {
+    if (err) {
+      return console.log('Error on write Echo on: ', err.message);
+    }
+    console.log('ECHO On');
+  });
+
+  port1.write('KISS\r\n', function(err) {
+    if (err) {
+      return console.log('Error on write KISS on: ', err.message);
+    }
+    console.log('KISS on');
+  });
+
+  port1.close()
+
   var tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
       baudRate : 9600
@@ -146,5 +170,63 @@ router.get('/api/ham/echo', (req, res) => {
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Hamsite' });
 });
+
+
+
+function connectKISS(clientID,myCallsign,mySSID) {
+
+  if(typeof sessions[clientID] == "undefined") {
+      var session = new ax25.Session();
+session.localCallsign = myCallsign;
+session.localSSID = mySSID;
+session.remoteCallsign = urCallsign;
+session.remoteSSID = urSSID;
+sessions[clientID] = session; 
+session.on("packet",
+    function(frame) {
+        //console.log(util.format("Send frame %s - %s",clientID,frame.log()));
+        tnc.send(frame.assemble());
+    }
+);
+
+session.on("data",
+    function(data) {
+      console.log(
+        util.format(
+          "Recv %s %s",clientID,bin2String(data).replace(/[^\x20-\x7E]/g, '?')));
+            if(typeof clients[clientID] != "undefined") 
+        clients[clientID].write(bin2String(data));
+    }
+);
+
+session.on(
+      "connection",
+      function(state) {
+        console.log(
+          util.format(
+            "Session %s %s.",
+            clientID,
+            (state) ? "connected" : "disconnected"
+          )
+        );
+        if(!state) {
+          delete sessions[clientID];
+                if(typeof clients[clientID] != "undefined") {
+            clients[clientID].end();
+            delete clients[clientID];
+          }
+        }
+      }
+    );
+
+session.on(
+      "error",
+      function(err) {
+        console.log(err);
+      }
+    );
+  session.connect();
+  }
+}
 
 module.exports = router;
