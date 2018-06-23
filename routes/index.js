@@ -9,8 +9,8 @@ var mySSID = 1;
 
 var sessions = {};
 
-console.log('TEST Loading Node index');
-console.log(myCallsign);
+console.log('TEST Loading Node index for:' + myCallsign);
+console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
  
 var serialPort = new SerialPort('/dev/ttyUSB0', {
  baudRate: 9600
