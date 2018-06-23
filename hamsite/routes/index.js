@@ -42,26 +42,19 @@ router.get('/api/ham/connect', (req, res) => {
 });
 
 router.get('/api/ham/echo', (req, res) => {
-
-  var port1 = new SerialPort('/dev/ttyUSB0', {
-    baudRate: 9600
+ 
+  $.ajax({
+    type: "POST",
+    url: "/D72.py",
+    data: { param: input },
+    success: callbackFunc
   });
 
-  port1.write('ECHO\r\n', function(err) {
-    if (err) {
-      return console.log('Error on write Echo on: ', err.message);
-    }
-    console.log('ECHO On');
-  });
+  function callbackFunc(response) {
+    // do something with the response
+    console.log(response);
+  }
 
-  port1.write('KISS\r\n', function(err) {
-    if (err) {
-      return console.log('Error on write KISS on: ', err.message);
-    }
-    console.log('KISS on');
-  });
-
-  port1.close()
 
   var tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
