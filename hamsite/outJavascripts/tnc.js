@@ -6,9 +6,25 @@ function check_test(){
 }
 
 function test_connect(){
-    console.log("Connect!!!!!!"); 
-    var SerialPort = require('serialport');
+    var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
+        if (err) {
+            return console.log('Error:', err.message);
+        } else {
+            return console.log("Connected to USB0"); 
+        }
+    });
+
+    var port2 = new SerialPort('/dev/tty.SLAB_USBtoUART', function (err) {
+        if (err) {
+            return console.log('Error:', err.message);
+        } else {
+            return console.log("Connect to SLAB_USB"); 
+        }
+    });
+}
+
     
+
 
 
 
