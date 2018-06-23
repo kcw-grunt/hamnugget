@@ -16,24 +16,12 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
  baudRate: 9600
 }, true);
  
- 
-serialPort.open(function (error) {
-  if ( error ) {
-    console.log('failed to open: '+error);
-  } else {
-    console.log('open');
-    serialPort.on('data', function(data) {
-      console.log('data received: ' + data);
-    });
-    serialPort.write("ls\n", function(err, results) {
-      console.log('err ' + err);
-      console.log('results ' + results);
-    });
-    serialPort.write("KISS ON \r\n", function(err, results) {
-      console.log('err ' + err);
-      console.log('results ' + results);
-    });
-  }
+serialPort.write("KISS ON \r\n", function(err, results) {
+      if (err) {
+        console.log('err ' + err);
+      }else{
+        console.log('results ' + results);
+      }
 });
   
 router.get('/api/hello', (req, res) => {
