@@ -16,6 +16,15 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
  baudRate: 9600
 }); 
 
+serialPort.on('data', function (data) {
+  console.log('Data:', data);
+});
+ 
+// Read data that is available but keep the stream from entering "flowing mode"
+serialPort.on('readable', function () {
+  console.log('Data:', port.read());
+});
+
 serialPort.write('ECHO ON \r\n', function(err) {
   if (err) {
     return console.log('Error on write: ', err.message);
@@ -27,7 +36,7 @@ serialPort.write('KISS ON \r\n', function(err) {
   if (err) {
     return console.log('Error on write: ', err.message);
   }
-  console.log('KISS on');
+  console.log('KISS On');
 });
  
   
