@@ -32,7 +32,7 @@ router.get('/api/ham/tnc/on', (req, res) => {
 
 router.get('/api/ham/connect', (req, res) => {
   var SerialPort = require('serialport');
-  var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
+  var port1 = new SerialPort('/dev/SLAB_USBtoUART', function (err) {
     if (err) {
         return console.log('Error:', err.message);
     } else {
