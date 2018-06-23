@@ -34,25 +34,17 @@ router.get('/api/ham/tnc/on', (req, res) => {
 });
 
 router.get('/api/ham/connect', (req, res) => {
+  // var port = new SerialPort('/dev/tty-usbserial1', {
+  //   baudRate: 57600
+  // });
 
-  var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
-    if (err) {
-        return console.log('Real Error:', err.message);
-    } else {
-        return console.log("Connected to USB0"); 
-    }
-  });
 
 });
 
 router.get('/api/ham/echo', (req, res) => {
 
-  var port1 = new SerialPort('/dev/ttyUSB0', function (err) {
-    if (err) {
-        return console.log('Turn on Error:', err.message);
-    } else { 
-        return console.log("Connected to USB0"); 
-    }
+  var port1 = new SerialPort('/dev/ttyUSB0', {
+    baudRate: 9600
   });
 
   port1.write('ECHO\r\n', function(err) {
