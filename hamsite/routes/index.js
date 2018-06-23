@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 const ax25 = require('ax25');
 
- 
-const tnc = new ax25.kissTNC({ serialPort : "/dev/ttyUSB0", baudRate : 9600 } );
 
 
 router.get('/api/hello', (req, res) => {
@@ -11,12 +9,15 @@ router.get('/api/hello', (req, res) => {
 });
 
 router.get('/api/ham/status', (req, res) => {
-  res.send({ response: 'HAM Connected' });
+  res.send({ response: 'HAM Sta...' });
 });
 
 router.get('/api/ham/connect', (req, res) => {
+
+  var tnc = new ax25.kissTNC(
+    
+  )
   tnc.on('frame', (frame) => { 
-    let packet = new ax25.Packet({ frame : frame }); 
     res.send({response:console.log('src : ${packet.sourceCallsign}')});
     ////, dst : ${packet.destinationCallsign}, inf : ${packet.infoString}');
     //});
@@ -29,7 +30,7 @@ router.get('/api/ham/connect', (req, res) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Hamsite' });
 });
 
 module.exports = router;
