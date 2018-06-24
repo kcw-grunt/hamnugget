@@ -16,28 +16,35 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
  baudRate: 9600
 }); 
 
-serialPort.on('data', function (data) {
-  console.log('Data:', data);
-});
- 
-// Read data that is available but keep the stream from entering "flowing mode"
-serialPort.on('readable', function () {
-  console.log('Data:', port.read());
-});
 
-serialPort.write('ECHO ON \r\n', function(err) {
-  if (err) {
-    return console.log('Error on write: ', err.message);
-  }
-  console.log('Echo On');
-});
+setupSerialPort();
 
-serialPort.write('KISS ON \r\n', function(err) {
-  if (err) {
-    return console.log('Error on write: ', err.message);
-  }
-  console.log('KISS On');
-});
+function setupSerialPort() {
+
+  serialPort.on('data', function (data) {
+    console.log('Data:', data);
+  });
+  
+  // Read data that is available but keep the stream from entering "flowing mode"
+  serialPort.on('readable', function () {
+    console.log('Data:', port.read());
+  });
+
+  serialPort.write('ECHO ON \r\n', function(err) {
+    if (err) {
+      return console.log('Error on write: ', err.message);
+    }
+    console.log('Echo On');
+  });
+
+  serialPort.write('KISS ON \r\n', function(err) {
+    if (err) {
+      return console.log('Error on write: ', err.message);
+    }
+    console.log('KISS On');
+  });
+}
+
  
   
 router.get('/api/hello', (req, res) => {
@@ -48,188 +55,22 @@ router.get('/api/ham/status', (req, res) => {
   res.send({ response: 'HAM Sta...' });
 });
 
-router.get('/api/ham/tnc/on', (req, res) => {
-
-  var tnc = new ax25.kissTNC(
-    
-  )
-  tnc.on('frame', (frame) => { 
-    res.send({response:console.log('src : ${packet.sourceCallsign}')});
-    ////, dst : ${packet.destinationCallsign}, inf : ${packet.infoString}');
-    //});
-  });
-  
-  tnc.on('error', (err) => {
-    console.log('ham nugget error' + err);
-  });
-});
-
-router.get('/api/ham/connect', (req, res) => {
-  // var port = new SerialPort('/dev/tty-usbserial1', {
-  //   baudRate: 57600
-  // });
-
-
-});
-
-router.get('/api/ham/echo', (req, res) => {
-   
-  var tnc = new ax25.kissTNC(
-    {	serialPort : "/dev/ttyUSB0",
-      baudRate : 9600
-    }
-  );
-
-  tnc.on(
-    "frame",
-    function(frame) {
-
-      var packet = new ax25.Packet();
-      packet.disassemble(frame);
-      if( packet.destinationCallsign != myCallsign
-        ||
-        packet.destinationSSID != mySSID
-      ) {
-        return;
-      }
-
-      console.log(packet.log());
-
-      var clientID = util.format(
-        "%s-%s-%s-%s",
-        packet.sourceCallsign,
-        packet.sourceSSID,
-        packet.destinationCallsign,
-        packet.destinationSSID
-      );
-
-      if(typeof sessions[clientID] == "undefined") {
-
-        sessions[clientID] = new ax25.Session();
-
-        sessions[clientID].on(
-          "packet",
-          function(frame) {
-            console.log(frame.log());
-            tnc.send(frame.assemble());
-          }
-        );
-
-        sessions[clientID].on(
-          "data",
-          function(data) {
-            sessions[clientID].sendString(
-              util.format(
-                "You sent: %s\r\n",
-                ax25.Utils.byteArrayToString(data)
-              )
-            );
-          }
-        );
-
-        sessions[clientID].on(
-          "connection",
-          function(state) {
-            console.log(
-              util.format(
-                "Client %s-%s %s.",
-                packet.sourceCallsign,
-                packet.sourceSSID,
-                (state) ? "connected" : "disconnected"
-              )
-            );
-            if(!state)
-              delete sessions[clientID];
-          }
-        );
-
-        sessions[clientID].on(
-          "error",
-          function(err) {
-            console.log(err);
-          }
-        );
-
-      }
-
-      if(typeof sessions[clientID] != "undefined")
-        sessions[clientID].receive(packet);
-
-    }
-
-  );
-
-  tnc.on(
-    "error",
-    function(err) {
-      console.log("HURRRRR! I DONE BORKED! " + err);
-    }
-  );
-
-});
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Hamsite' });
+  res.render('index', { title: 'Hamsite',mycall: myCallsign});
 });
 
-
-
-function connectKISS(clientID,myCallsign,mySSID) {
-
-  if(typeof sessions[clientID] == "undefined") {
-      var session = new ax25.Session();
-session.localCallsign = myCallsign;
-session.localSSID = mySSID;
-session.remoteCallsign = urCallsign;
-session.remoteSSID = urSSID;
-sessions[clientID] = session; 
-session.on("packet",
-    function(frame) {
-        //console.log(util.format("Send frame %s - %s",clientID,frame.log()));
-        tnc.send(frame.assemble());
+/* POST home page. */
+router.post('/', function (req, res) {
+  console.log(req.body.message);
+  console.log(req.body.callsign);
+  serialPort.write(req.body.message, function(err) {
+    if (err) {
+      return console.log('Error on write: ', err.message);
     }
-);
-
-session.on("data",
-    function(data) {
-      console.log(
-        util.format(
-          "Recv %s %s",clientID,bin2String(data).replace(/[^\x20-\x7E]/g, '?')));
-            if(typeof clients[clientID] != "undefined") 
-        clients[clientID].write(bin2String(data));
-    }
-);
-
-session.on(
-      "connection",
-      function(state) {
-        console.log(
-          util.format(
-            "Session %s %s.",
-            clientID,
-            (state) ? "connected" : "disconnected"
-          )
-        );
-        if(!state) {
-          delete sessions[clientID];
-                if(typeof clients[clientID] != "undefined") {
-            clients[clientID].end();
-            delete clients[clientID];
-          }
-        }
-      }
-    );
-
-session.on(
-      "error",
-      function(err) {
-        console.log(err);
-      }
-    );
-  session.connect();
-  }
-}
+    console.log('Message Sent');
+  });
+});
 
 module.exports = router;

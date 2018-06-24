@@ -47,19 +47,7 @@ ondaTerminalApp.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// ondaTerminalApp.get('/api/send_packet/:text', (req, res) => { 
-//   let packet = new ax25.Packet({ sourceCallsign : 'mycall', sourceSSID : 0, 
-//                             destinationCallsign : 'mycall', destinationSSID : 1, 
-//                             type : ax25.Defs.U_FRAME_UI, 
-//                             infoString : req.params.text }); 
-//   tnc.send(packet.assemble()); 
-//   res.json({ ok : true }); 
-// });
 
-ondaTerminalApp.get('/api/ham/send_packet/:text', (req, res) => {
-  let isWorking = false;
-  res.json(isWorking);
-});
 
 
 module.exports = ondaTerminalApp;

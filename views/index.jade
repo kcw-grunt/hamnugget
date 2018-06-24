@@ -5,15 +5,19 @@ block content
   head
   body
   h1= title
-  p Welcome to #{title}
-      button(onclick='test_connect()') Click TNC
-
+  p Welcome to !{mycall}
   p
-      button#Black(
-      type='submit'
-      style='width: 25px; height: 25px; background-color: black;'
-      onclick="if you plan to use single quotes here, use double quotes outer"
-      )
+  form(name="send-text", method="post")
+        div.input
+            span.label Call Sign
+            input(type="text", name="callsign")
+        div.input
+            p
+            span.label Message
+            textarea(name="message", cols="20", rows="3")
+            p
+        div.actions
+            input(type="submit", value="SEND")
   p
 
 
