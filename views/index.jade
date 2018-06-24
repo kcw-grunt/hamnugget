@@ -7,19 +7,25 @@ block content
   h1= title
   p Welcome to !{mycall}
   p
-  form(name="send-text", method="post")
+  form(name="sendtext", method="post")
         div.input
             span.label Call Sign
+            br
             input(type="text", name="callsign")
         div.input
             p
-            span.label Message
-            textarea(name="message", cols="20", rows="3")
+            span.label Message 
+            br
+            textarea(name="message", cols="100", rows="3")
             p
         div.actions
             input(type="submit", value="SEND")
   p
-
+  p     
+    div    
+        div 
+            span.label !{packetResponse}  
+  
 
   
 

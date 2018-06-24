@@ -9,6 +9,8 @@ var mySSID = 1;
 
 var sessions = {};
 
+var packetResponse = "NO TEST";
+
 console.log('TEST Loading Node index for:' + myCallsign);
 console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
  
@@ -58,19 +60,27 @@ router.get('/api/ham/status', (req, res) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Hamsite',mycall: myCallsign});
+  res.render('index', { title: 'Hamsite',mycall: myCallsign, packetResponse: packetResponse});
 });
 
-/* POST home page. */
+/* POST . */
 router.post('/', function (req, res) {
   console.log(req.body.message);
+
+  var status = serialPort.isOpen;
+  if (status) {
+    serialPort.write(req.body.message, function(err) {
+      if (err) {
+        return console.log('Error on write: ', err.message);
+      }
+      console.log('Message Sent');
+    });
+  }
   console.log(req.body.callsign);
-  serialPort.write(req.body.message, function(err) {
-    if (err) {
-      return console.log('Error on write: ', err.message);
-    }
-    console.log('Message Sent');
-  });
 });
+
+
+
+
 
 module.exports = router;
