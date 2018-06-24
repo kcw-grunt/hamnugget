@@ -3,7 +3,6 @@ var router = express.Router();
 var SerialPort = require('serialport');
 var util = require('util');
 const ax25 = require('ax25');
-var tnclib = require('./grunttnc.js');
 var myCallsign = "KM6TIG";
 var mySSID = 1;
 
@@ -31,14 +30,14 @@ function sendPacketMessage(messagetext) {
 
 function setupSerialPort() {
 
-  serialPort.on('data', function (data) {
-    console.log('Data:', data);
-  });
+  // serialPort.on('data', function (data) {
+  //   console.log('Data:', data);
+  // });
   
-  // Read data that is available but keep the stream from entering "flowing mode"
-  serialPort.on('readable', function () {
-    console.log('Data:', port.read());
-  });
+  // // Read data that is available but keep the stream from entering "flowing mode"
+  // serialPort.on('readable', function () {
+  //   console.log('Data:', port.read());
+  // });
 
   serialPort.write('ECHO ON \r\n', function(err) {
     if (err) {

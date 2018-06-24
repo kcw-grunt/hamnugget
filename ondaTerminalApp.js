@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 
 var ondaTerminalApp = express();
 
+
 // view engine setup
 ondaTerminalApp.set('views', path.join(__dirname, 'views'));
 ondaTerminalApp.set('view engine', 'jade');
