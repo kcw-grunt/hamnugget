@@ -3,7 +3,7 @@ var router = express.Router();
 var SerialPort = require('serialport');
 var util = require('util');
 const ax25 = require('ax25');
- 
+var tnclib = require('./grunttnc.js');
 var myCallsign = "KM6TIG";
 var mySSID = 1;
 
@@ -20,6 +20,14 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
 
 
 setupSerialPort();
+
+sendPacketMessage('Test');
+
+function sendPacketMessage(messagetext) {
+
+
+
+}
 
 function setupSerialPort() {
 
@@ -46,7 +54,6 @@ function setupSerialPort() {
     console.log('KISS On');
   });
 }
-
  
   
 router.get('/api/hello', (req, res) => {
