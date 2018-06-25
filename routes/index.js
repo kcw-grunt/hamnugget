@@ -20,11 +20,102 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
 
 setupSerialPort();
 
-sendPacketMessage('Test');
+setEcho();
 
-function sendPacketMessage(messagetext) {
+function setEcho() {
+  var tnc = new ax25.kissTNC(
+    {	serialPort : "/dev/ttyUSB0",
+      baudRate : 9600
+    }
+  );
 
-  console.log(messagetext);
+  tnc.on(
+    "frame",
+    function(frame) {
+  
+      var packet = new ax25.Packet();
+      packet.disassemble(frame);
+      if( packet.destinationCallsign != myCallsign
+        ||
+        packet.destinationSSID != mySSID
+      ) {
+        return;
+      }
+  
+      console.log(packet.log());
+  
+      var clientID = util.format(
+        "%s-%s-%s-%s",
+        packet.sourceCallsign,
+        packet.sourceSSID,
+        packet.destinationCallsign,
+        packet.destinationSSID
+      );
+  
+      if(typeof sessions[clientID] == "undefined") {
+  
+        sessions[clientID] = new ax25.Session();
+  
+        sessions[clientID].on(
+          "packet",
+          function(frame) {
+            console.log(frame.log());
+            tnc.send(frame.assemble());
+          }
+        );
+  
+        sessions[clientID].on(
+          "data",
+          function(data) {
+            sessions[clientID].sendString(
+              util.format(
+                "You sent: %s\r\n",
+                ax25.Utils.byteArrayToString(data)
+              )
+            );
+          }
+        );
+  
+        sessions[clientID].on(
+          "connection",
+          function(state) {
+            console.log(
+              util.format(
+                "Client %s-%s %s.",
+                packet.sourceCallsign,
+                packet.sourceSSID,
+                (state) ? "connected" : "disconnected"
+              )
+            );
+            if(!state)
+              delete sessions[clientID];
+          }
+        );
+  
+        sessions[clientID].on(
+          "error",
+          function(err) {
+            console.log(err);
+          }
+        );
+  
+      }
+  
+      if(typeof sessions[clientID] != "undefined")
+        sessions[clientID].receive(packet);
+  
+    }
+  
+  );
+  
+  tnc.on(
+    "error",
+    function(err) {
+      console.log("HURRRRR! I DONE BORKED! " + err);
+    }
+  );
+
+
 
 }
 
@@ -38,13 +129,6 @@ function setupSerialPort() {
   // serialPort.on('readable', function () {
   //   console.log('Data:', port.read());
   // });
-
-  serialPort.write('ECHO ON \r\n', function(err) {
-    if (err) {
-      return console.log('Error on write: ', err.message);
-    }
-    console.log('Echo On');
-  });
 
   serialPort.write('KISS ON \r\n', function(err) {
     if (err) {
