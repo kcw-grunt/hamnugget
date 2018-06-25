@@ -18,8 +18,7 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
 }); 
 
 
-setupSerialPort();
-
+setEcho();
 
 function setEcho() {
   var tnc = new ax25.kissTNC(
