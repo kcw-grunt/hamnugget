@@ -4,9 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-
 var ondaTerminalApp = express();
+
+var indexRouter = require('./routes/index');
+const tncRouter = require('./routes/tnc');
+ondaTerminalApp.use('/tnc', tncRouter);
+
 
 
 // view engine setup

@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  head
+  script. (src='/tnc.js')
+  body
+  h1= title
+  p Welcome to !{cs}
+  p
+  form(name="sendtext", method="post")
+        div.input
+            span.label Call Sign
+            br
+            input(type="text", name="callsign", action = "/sendmessage")
+        div.input
+            p
+            span.label Message 
+            br
+            textarea(name="message", cols="100", rows="3")
+            p
+        div.actions
+            input(type="submit", value="SEND")
+  p
+  p     
+    div    
+        div 
+            span.label !{pr}  
+            html(lang="en")
+  

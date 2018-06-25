@@ -8,7 +8,7 @@ var mySSID = 1;
 
 var sessions = {};
 
-var packetResponse = "NO TEST";
+
 
 console.log('TEST Loading Node index for: ' + myCallsign + '-' + mySSID);
 console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
@@ -17,9 +17,8 @@ console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
 //  baudRate: 9600
 // }); 
 
-
-sendHelloPacket();
-
+ 
+setEcho()
 function setEcho() {
   var tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
@@ -137,60 +136,6 @@ function setEcho() {
 //   });
 // }
 
-function sendHelloPacket() {
-
-  var tnc = new ax25.kissTNC(
-    {	'serialPort' : "/dev/ttyUSB0",
-      'baudRate' : 9600
-    }
-  );
-  
-  var beacon = function() {
-    var packet = new ax25.Packet(
-      {	sourceCallsign : "MYCALL",
-        destinationCallsign : "BEACON",
-        type : ax25.U_FRAME_UI,
-        infoString : "Hello world!"
-      }
-    );
-    var frame = packet.assemble();
-    tnc.send(frame);
-    console.log("Beacon sent.");
-  }
-  
-  tnc.on(
-    "error",
-    function(err) {
-      console.log(err);
-    }
-  );
-  
-  tnc.on(
-    "opened",
-    function() {
-      console.log("TNC opened on " + tnc.serialPort + " at " + tnc.baudRate);
-      setInterval(beacon, 30000); // Beacon every 30 seconds - excessive!
-    }
-  );
-  
-  tnc.on(
-    "frame",
-    function(frame) {
-      var packet = new ax25.Packet({ 'frame' : frame });
-      console.log(
-        util.format(
-          "Packet seen from %s-%s to %s-%s.",
-          packet.sourceCallsign,
-          packet.sourceSSID,
-          packet.destinationCallsign,
-          packet.destinationSSID
-        )
-      );
-      if(packet.infoString != "")
-        console.log(packet.infoString);
-    }
-  );
-}
 
 
  
@@ -206,7 +151,7 @@ router.get('/api/ham/status', (req, res) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Hamsite',mycall: myCallsign, packetResponse: packetResponse});
+  res.render('index', { title: 'Hamsite',mycall: myCallsign});
 });
 
 /* POST . */
@@ -224,6 +169,8 @@ router.post('/', function (req, res) {
   }
   console.log(req.body.callsign);
 });
+
+
 
 
 
