@@ -64,6 +64,8 @@ function echoTNC() {
       baudRate : 9600
     }
   );
+
+  tnc.send('KISS ON\r\n');
   
   var sessions = {};
   
