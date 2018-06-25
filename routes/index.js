@@ -18,7 +18,7 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
 }); 
 
 
-setEcho();
+sendHelloPacket();
 
 function setEcho() {
   var tnc = new ax25.kissTNC(
@@ -117,24 +117,79 @@ function setEcho() {
 
 }
 
-function setupSerialPort() {
+// function setupSerialPort() {
 
-  // serialPort.on('data', function (data) {
-  //   console.log('Data:', data);
-  // });
+//   // serialPort.on('data', function (data) {
+//   //   console.log('Data:', data);
+//   // });
   
-  // // Read data that is available but keep the stream from entering "flowing mode"
-  // serialPort.on('readable', function () {
-  //   console.log('Data:', port.read());
-  // });
+//   // // Read data that is available but keep the stream from entering "flowing mode"
+//   // serialPort.on('readable', function () {
+//   //   console.log('Data:', port.read());
+//   // });
 
-  serialPort.write('KISS ON \r\n', function(err) {
-    if (err) {
-      return console.log('Error on write: ', err.message);
+//   serialPort.write('KISS ON \r\n', function(err) {
+//     if (err) {
+//       return console.log('Error on write: ', err.message);
+//     }
+//     console.log('KISS On');
+//     setEcho();
+//   });
+// }
+
+function sendHelloPacket() {
+
+  var tnc = new ax25.kissTNC(
+    {	'serialPort' : "/dev/ttyUSB0",
+      'baudRate' : 9600
     }
-    console.log('KISS On');
-    setEcho();
-  });
+  );
+  
+  var beacon = function() {
+    var packet = new ax25.Packet(
+      {	sourceCallsign : "MYCALL",
+        destinationCallsign : "BEACON",
+        type : ax25.U_FRAME_UI,
+        infoString : "Hello world!"
+      }
+    );
+    var frame = packet.assemble();
+    tnc.send(frame);
+    console.log("Beacon sent.");
+  }
+  
+  tnc.on(
+    "error",
+    function(err) {
+      console.log(err);
+    }
+  );
+  
+  tnc.on(
+    "opened",
+    function() {
+      console.log("TNC opened on " + tnc.serialPort + " at " + tnc.baudRate);
+      setInterval(beacon, 30000); // Beacon every 30 seconds - excessive!
+    }
+  );
+  
+  tnc.on(
+    "frame",
+    function(frame) {
+      var packet = new ax25.Packet({ 'frame' : frame });
+      console.log(
+        util.format(
+          "Packet seen from %s-%s to %s-%s.",
+          packet.sourceCallsign,
+          packet.sourceSSID,
+          packet.destinationCallsign,
+          packet.destinationSSID
+        )
+      );
+      if(packet.infoString != "")
+        console.log(packet.infoString);
+    }
+  );
 }
 
 
