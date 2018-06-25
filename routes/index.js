@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var SerialPort = require('serialport');
 var util = require('util');
-const ax25 = require('ax25');
+const ax25 = require('th-d72-ax25');
 var myCallsign = "KM6TIG";
 var mySSID = 1;
 
@@ -10,7 +10,7 @@ var sessions = {};
 
 var packetResponse = "NO TEST";
 
-console.log('TEST Loading Node index for:' + myCallsign);
+console.log('TEST Loading Node index for: ' + myCallsign + '-' + mySSID);
 console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
  
 var serialPort = new SerialPort('/dev/ttyUSB0', {
@@ -24,7 +24,7 @@ sendPacketMessage('Test');
 
 function sendPacketMessage(messagetext) {
 
-
+  console.log(messagetext);
 
 }
 
@@ -53,6 +53,8 @@ function setupSerialPort() {
     console.log('KISS On');
   });
 }
+
+
  
   
 router.get('/api/hello', (req, res) => {
