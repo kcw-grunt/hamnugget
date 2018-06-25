@@ -7,7 +7,9 @@ var logger = require('morgan');
 var ondaTerminalApp = express();
 
 var indexRouter = require('./routes/index');
-const tncRouter = require('./routes/tnc');
+var tncRouter = require('./routes/tnc');
+
+ondaTerminalApp.use('/index', indexRouter);
 ondaTerminalApp.use('/tnc', tncRouter);
 
 
@@ -27,15 +29,6 @@ ondaTerminalApp.use(express.static(path.join(__dirname, 'public')));
 ondaTerminalApp.use('/', indexRouter);
 
 
-// Get the Javascript in the browser
-ondaTerminalApp.use("/javascripts", express.static("./outJavascripts"));
-// Get the URL
-ondaTerminalApp.all("/", function(req, res){
-  // Render the Jade and Send for the client (Browser)
-  req.render("index.jade");
-});
-
-
 // catch 404 and forward to error handler
 ondaTerminalApp.use(function(req, res, next) {
   next(createError(404));
@@ -52,6 +45,16 @@ ondaTerminalApp.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+ondaTerminalApp.get('/tnc', function(req, res) {
+  var station = 'hello KM6TIG';
+  res.render(__dirname + "/views/tnc.html", {station:station});
+});
+
+
+ondaTerminalApp.post('/tnc', function(req, res){ 
+  console.log('After post');
+});
 
 
 

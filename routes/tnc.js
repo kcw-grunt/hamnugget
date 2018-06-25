@@ -11,6 +11,7 @@ var mySSID = 1;
 
 var packetResponse = "NO TEST";
 
+
 TNCRouter.route('/').get(function (req, res) {
   res.render('tnc',{cs:myCallsign,pr:packetResponse});
 });
@@ -26,6 +27,14 @@ console.log(callsign);
 
 res.render('tnc',{cs:callsign,pr:packetResponse});
 });
+ 
+
+function load(){
+  var val1 = myCallsign + mySSID;
+  document.getElementById("station").innerHTML = val1;
+}
+
+
 // TNCRouter.route('/sendtext').post(function (req, res) {
 //   mySSID = mySSID + 1;
 // var packetmessage = 'This might be a real message: ' + mySSID;

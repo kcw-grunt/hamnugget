@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="jquery-1.10.2.js" type="text/javascript"></script>
+    <script language="Javascript"> 
+    </script>
+    <script src='/tnc.js'></script>
+</head>
+<body>
+<h1>TNC</h1> 
+<label for="station"></label>
+<form name="sendtext" method="post" action="/tnc">
+  <div class="input"><span class="label">Call Sign</span><br/>
+    <input type="text" name="callsign"/>
+  </div>
+  <br>
+  <div class="input">
+    <p></p><span class="label">Message </span><br/>
+    <textarea cols="30" rows="5" name="packettext"></textarea>
+    <p></p>
+  </div>
+  <div class="actions">
+    <input type="submit" value="SEND"/>
+  </div>
+</form>
+</body>
+ 
