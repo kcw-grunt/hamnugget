@@ -13,9 +13,9 @@ var packetResponse = "NO TEST";
 console.log('TEST Loading Node index for: ' + myCallsign + '-' + mySSID);
 console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
  
-var serialPort = new SerialPort('/dev/ttyUSB0', {
- baudRate: 9600
-}); 
+// var serialPort = new SerialPort('/dev/ttyUSB0', {
+//  baudRate: 9600
+// }); 
 
 
 sendHelloPacket();
