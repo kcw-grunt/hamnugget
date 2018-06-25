@@ -16,9 +16,11 @@ TNCRouter.route('/').get(function (req, res) {
 });
 
 
-TNCRouter.post('/',function (req,res){ 
-var packetResponse = 'boy.message';//req.body.message;
-var callsign = 'body.sc';//req.body.cs;
+TNCRouter.post('/',function (req,res){
+sendHelloPacket();  
+  mySSID = mySSID + 4; 
+var packetResponse = mySSID;//req.body.message;
+var callsign = req.body.messagetext;
 console.log(packetResponse);
 console.log(callsign); 
 

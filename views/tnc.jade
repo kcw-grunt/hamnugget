@@ -2,6 +2,7 @@ extends layout
 
 block content
   head
+  textarea(cols="3" rows="5" name="packettext")=messagetext
   script. (src='/tnc.js')
   body
   h1= title
@@ -11,12 +12,12 @@ block content
         div.input
             span.label Call Sign
             br
-            input(type="text", name="callsign", action = "/sendmessage")
+            input(type="text", name="callsign")
         div.input
             p
             span.label Message 
             br
-            textarea(name="message", cols="100", rows="3")
+            #{messagetext}
             p
         div.actions
             input(type="submit", value="SEND")

@@ -14,7 +14,8 @@ ondaTerminalApp.use('/tnc', tncRouter);
 
 // view engine setup
 ondaTerminalApp.set('views', path.join(__dirname, 'views'));
-ondaTerminalApp.set('view engine', 'jade');
+ondaTerminalApp.engine('html', require('ejs').renderFile);
+ondaTerminalApp.set('view engine', 'html');
 
 ondaTerminalApp.use(logger('dev'));
 ondaTerminalApp.use(express.json());
