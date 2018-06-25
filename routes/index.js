@@ -20,7 +20,6 @@ var serialPort = new SerialPort('/dev/ttyUSB0', {
 
 setupSerialPort();
 
-setEcho();
 
 function setEcho() {
   var tnc = new ax25.kissTNC(
@@ -135,6 +134,7 @@ function setupSerialPort() {
       return console.log('Error on write: ', err.message);
     }
     console.log('KISS On');
+    setEcho();
   });
 }
 
