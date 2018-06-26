@@ -57,12 +57,7 @@ router.get('/api/packet', (req, res) => {
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
   tnc.on('data', log_packet);
-  tnc.open(
-      () => {
-          console.log('TNC opened');
-          send_string('HI HI OM!');
-      }
-  );
+  send_string('ehllo no');
 
 });
 
