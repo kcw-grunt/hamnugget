@@ -36,7 +36,7 @@ router.get('/api/packet', (req, res) => {
   //log_packet();
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
-  //tnc.on('data', log_packet());
+  tnc.on('data', log_packet);
   tnc.open(
       () => {
           console.log('TNC opened');
@@ -173,6 +173,7 @@ function echoTNC() {
     }
   );
 }
+
 function log_packet(data) {
   const packet = new ax25.Packet();
   packet.disassemble(data.data);
