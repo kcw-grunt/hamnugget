@@ -59,19 +59,39 @@ router.get('/api/packet', (req, res) => {
   function send_string(str) {
     const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
-    packet.source = { callsign : 'KM6TIG', ssid : 1 }; 
+    packet.source = { callsign : 'KM6TIG', ssid : 1 };
+    console.log(package.source); 
     packet.destination = { callsign : 'KM6TIG', ssid : 2 }; 
-    packet.infoString = 'Hello this is a test'; 
-    console.log('Will send:' +packet.infoString);
-    tnc.send(packet.assemble(), () => console.log('Sent:', str));
+    console.log(package.destination); 
+    packet.infoString = str; 
+    console.log('Will send:' + packet.infoString);
+    var frame = packet.assemble(); 
+    tnc.send(frame);
+    console.log('Sent (data):' + frame);
   }
  
-  process.on('SIGTERM', tnc.close);
-  tnc.on('error', console.log);
-  tnc.on('data', log_packet);
-  send_string('ehllo no');
+  send_string('Send test hello');
 
 });
+
+
+router.get('/api/frame', (req, res) => {
+  tnc.on(
+    "frame",
+    function(frame) {
+      console.log("Here's an array of bytes representing an AX.25 frame: " + frame);
+    }
+  );
+  
+  tnc.on(
+    "error",
+    function(err) {
+      console.log("HURRRRR! I DONE BORKED!" + err);
+    }
+  )
+});
+
+
 
 router.get('/api/ham/status', (req, res) => {
   res.send({ response: 'HAM Sta...' });
