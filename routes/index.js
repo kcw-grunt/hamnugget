@@ -62,16 +62,17 @@ router.get('/api/packet', (req, res) => {
   }
   function send_string(str) {
     const packet = new ax25.Packet();
-    packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui
-    
-    control.frame_types.u_frame.subtypes.ui;
-    packet.source = { callsign : 'KM6TIG', ssid : 1 };
-    packet.destination = { callsign : 'KM6TIG', ssid : 2 };
-    packet.payload = Buffer.from(str, 'ascii');
+    packet.type = ax25.Defs.U_FRAME_UI;
+    packet.sourceCallsign = 'KM6TIG'; 
+    packet.destinationCallsign = 'KM6TIG'; 
+    packet.sourceSSID = '1'; 
+    packet.destinationSSID = '2'; 
+    packet.infoString = 'Hello this is a test'; 
     tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
   }
 
-  //log_packet();
+  tnc.send_string('Hello message')
+
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
   tnc.on('data', log_packet);
