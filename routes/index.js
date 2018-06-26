@@ -18,8 +18,25 @@ console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
 
 router.get('/api/hello', (req, res) => {
 
-  echoTNC();
-  res.send(sendHello());
+  console.log('Hello ?');
+  // device, baud_rate
+  const tnc = new ax25.kissTNC(
+    {	serialPort : "/dev/ttyUSB0",
+      baudRate : 9600
+    }
+  );
+
+  function h_send_string(str) {
+    const packet = new ax25.Packet();
+    packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui
+    
+    control.frame_types.u_frame.subtypes.ui;
+    packet.source = { callsign : 'KM6TIG', ssid : 1 };
+    packet.destination = { callsign : 'KM6TIG', ssid : 2 };
+    packet.payload = Buffer.from(str, 'ascii');
+    tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
+  }
+  h_send_string('hello no');
  
 });
 
@@ -46,7 +63,9 @@ router.get('/api/packet', (req, res) => {
   }
   function send_string(str) {
     const packet = new ax25.Packet();
-    packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui;
+    packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui
+    
+    control.frame_types.u_frame.subtypes.ui;
     packet.source = { callsign : 'KM6TIG', ssid : 1 };
     packet.destination = { callsign : 'KM6TIG', ssid : 2 };
     packet.payload = Buffer.from(str, 'ascii');
