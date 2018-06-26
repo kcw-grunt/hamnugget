@@ -50,7 +50,7 @@ router.get('/api/packet', (req, res) => {
   );
 
   function log_packet(data) {
-    const packet = new ax25.Packet();
+    const packet = new ax25.Packet(modulo = 8);
     packet.disassemble(data.data);
     console.log(`Packet received on port ${data.port}`);
     console.log('Destination:', packet.destination);
@@ -61,17 +61,16 @@ router.get('/api/packet', (req, res) => {
     }
   }
   function send_string(str) {
-    const packet = new ax25.Packet();
+    const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
-    packet.sourceCallsign = 'KM6TIG'; 
-    packet.destinationCallsign = 'KM6TIG'; 
-    packet.sourceSSID = '1'; 
-    packet.destinationSSID = '2'; 
+    packet.source = { callsign : 'KM6TIG', ssid : 1 }; 
+    packet.destination = { callsign : 'KM6TIG', ssid : 2 }; 
     packet.infoString = 'Hello this is a test'; 
+    console.log('Will send:' +packet.infoString);
     tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
   }
 
-  
+  log_packet()
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
   tnc.on('data', log_packet);
