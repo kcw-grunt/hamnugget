@@ -23,6 +23,20 @@ router.get('/api/hello', (req, res) => {
  
 });
 
+router.get('/api/packet', (req, res) => {
+  // device, baud_rate
+  const tnc = new ax25.kissTNC('/dev/ttyUSB0', 9600);
+  process.on('SIGTERM', tnc.close);
+  tnc.on('error', console.log);
+  tnc.on('data', log_packet);
+  tnc.open(
+      () => {
+          console.log('TNC opened');
+          send_string('HI HI OM!');
+      }
+  );
+});
+
 router.get('/api/ham/status', (req, res) => {
   res.send({ response: 'HAM Sta...' });
 });
@@ -52,9 +66,6 @@ router.post('/', function (req, res) {
 function sendHello() {
 
 
-
-
-
   return "Testresponse";
 }
 
@@ -65,7 +76,6 @@ function echoTNC() {
     }
   );
 
-  tnc.send('KISS ON\r\n');
   
   var sessions = {};
   
@@ -154,6 +164,15 @@ function echoTNC() {
       console.log("HURRRRR! I DONE BORKED! " + err);
     }
   );
+}
+
+function send_string(str) {
+  const packet = new AX25.Packet();
+  packet.type = AX25.Masks.control.frame_types.u_frame.subtypes.ui;
+  packet.source = { callsign : 'KM6TIG', ssid : 1 };
+  packet.destination = { callsign : 'KM6TIG', ssid : 2 };
+  packet.payload = Buffer.from(str, 'ascii');
+  tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
 }
 
 
