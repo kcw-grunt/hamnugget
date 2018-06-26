@@ -30,7 +30,7 @@ router.get('/api/hello', (req, res) => {
 
     const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
-    package.source = { callsign : 'KM6TIG', ssid : 1 };
+    packet.source = { callsign : 'KM6TIG', ssid : 1 };
     packet.destination = { callsign : 'KM6TIG', ssid : 2 };
     packet.payload == Buffer.from(str, 'ascii');
     tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
