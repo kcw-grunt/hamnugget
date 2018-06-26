@@ -22,7 +22,12 @@ router.get('/api/hello', (req, res) => {
   // device, baud_rate
   const tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
-      baudRate : 9600
+      baudRate : 9600,
+      txDelay : 500,
+      persistence : .25,
+      slotTime : 500,
+      txTail : 100,
+      fullDuplex : false
     }
   );
 
@@ -42,10 +47,15 @@ router.get('/api/hello', (req, res) => {
 router.get('/api/packet', (req, res) => {
  
   console.log('TNC Starting....');
-  // device, baud_rate
+  
   const tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
-      baudRate : 9600
+      baudRate : 9600,
+      txDelay : 500,
+      persistence : .25,
+      slotTime : 500,
+      txTail : 100,
+      fullDuplex : false
     }
   );
 
