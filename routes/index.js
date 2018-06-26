@@ -71,8 +71,7 @@ router.get('/api/packet', (req, res) => {
     tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
   }
 
-  tnc.send_string('Hello message')
-
+  
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
   tnc.on('data', log_packet);
