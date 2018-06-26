@@ -31,16 +31,16 @@ router.get('/api/hello', (req, res) => {
     }
   );
 
-  function h_send_string(str) {
+  function send_string(str) {
 
     const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
     packet.source = { callsign : 'KM6TIG', ssid : 1 };
     packet.destination = { callsign : 'KM6TIG', ssid : 2 };
     packet.payload == Buffer.from(str, 'ascii');
-    tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
+    tnc.send(packet.assemble(), () => console.log('Sent:', str));
   }
-  h_send_string('hello no');
+  send_string('hello no');
  
 });
 
@@ -77,10 +77,9 @@ router.get('/api/packet', (req, res) => {
     packet.destination = { callsign : 'KM6TIG', ssid : 2 }; 
     packet.infoString = 'Hello this is a test'; 
     console.log('Will send:' +packet.infoString);
-    tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
+    tnc.send(packet.assemble(), () => console.log('Sent:', str));
   }
-
-  log_packet()
+ 
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
   tnc.on('data', log_packet);
