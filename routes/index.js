@@ -27,11 +27,12 @@ router.get('/api/hello', (req, res) => {
   );
 
   function h_send_string(str) {
-    const packet = new ax25.Packet();
-    packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui;
-    packet.source = { callsign : 'KM6TIG', ssid : 1 };
+
+    const packet = new ax25.Packet(modulo = 8);
+    packet.type = ax25.Defs.U_FRAME_UI;
+    package.source = { callsign : 'KM6TIG', ssid : 1 };
     packet.destination = { callsign : 'KM6TIG', ssid : 2 };
-    packet.payload = Buffer.from(str, 'ascii');
+    packet.payload == Buffer.from(str, 'ascii');
     tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
   }
   h_send_string('hello no');
