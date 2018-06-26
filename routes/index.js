@@ -60,9 +60,9 @@ router.get('/api/packet', (req, res) => {
     const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
     packet.source = { callsign : 'KM6TIG', ssid : 1 };
-    console.log(package.source); 
+    console.log(packet.source); 
     packet.destination = { callsign : 'KM6TIG', ssid : 2 }; 
-    console.log(package.destination); 
+    console.log(packet.destination); 
     packet.infoString = str; 
     console.log('Will send:' + packet.infoString);
     var frame = packet.assemble(); 
