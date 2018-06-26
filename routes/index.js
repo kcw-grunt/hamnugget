@@ -25,7 +25,12 @@ router.get('/api/hello', (req, res) => {
 
 router.get('/api/packet', (req, res) => {
   // device, baud_rate
-  const tnc = new ax25.kissTNC('/dev/ttyUSB0', 9600);
+  const tnc = new ax25.kissTNC(
+    {	serialPort : "/dev/ttyUSB0",
+      baudRate : 9600
+    }
+  );
+  
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
   tnc.on('data', log_packet);
