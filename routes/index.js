@@ -25,7 +25,7 @@ router.get('/api/hello', (req, res) => {
 
 router.get('/api/packet', (req, res) => {
  
-  res.send({ response: 'TNC send working' });
+  console.log('TNC Starting....');
   // device, baud_rate
   const tnc = new ax25.kissTNC(
     {	serialPort : "/dev/ttyUSB0",
