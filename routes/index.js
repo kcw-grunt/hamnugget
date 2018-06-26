@@ -15,16 +15,18 @@ console.log('TEST Loading Node index for:' + myCallsign);
 console.log('Turn Kenwood THD72A On  and set to Packet 12 \n Pressing TNC');
  
 
+const tnc = new ax25.kissTNC(
+  {	serialPort : "/dev/ttyUSB0",
+    baudRate : 9600
+  }
+);
+console.log('TNC var set...');
 
 router.get('/api/hello', (req, res) => {
 
   console.log('Hello ?');
   // device, baud_rate
-  const tnc = new ax25.kissTNC(
-    {	serialPort : "/dev/ttyUSB0",
-      baudRate : 9600
-    }
-  );
+
 
   function send_string(str) {
 
@@ -43,12 +45,6 @@ router.get('/api/packet', (req, res) => {
  
   console.log('TNC Starting....');
   
-  const tnc = new ax25.kissTNC(
-    {	serialPort : "/dev/ttyUSB0",
-      baudRate : 9600
-    }
-  );
-
   function log_packet(data) {
     const packet = new ax25.Packet(modulo = 8);
     packet.disassemble(data.data);
@@ -110,11 +106,6 @@ function sendHello() {
 }
 
 function echoTNC() {
-  var tnc = new ax25.kissTNC(
-    {	serialPort : "/dev/ttyUSB0",
-      baudRate : 9600
-    }
-  );
 
   
   var sessions = {};
