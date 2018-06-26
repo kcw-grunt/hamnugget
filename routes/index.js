@@ -33,9 +33,10 @@ router.get('/api/packet', (req, res) => {
     }
   );
 
+  //log_packet();
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
-  tnc.on('data', log_packet());
+  //tnc.on('data', log_packet());
   tnc.open(
       () => {
           console.log('TNC opened');
