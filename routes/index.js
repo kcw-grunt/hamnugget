@@ -33,6 +33,26 @@ router.get('/api/packet', (req, res) => {
     }
   );
 
+  function log_packet(data) {
+    const packet = new ax25.Packet();
+    packet.disassemble(data.data);
+    console.log(`Packet received on port ${data.port}`);
+    console.log('Destination:', packet.destination);
+    console.log('Source:', packet.source);
+    console.log('Type:', packet.type_name);
+    if (packet.payload.length > 0) {
+        console.log('Payload:', packet.payload.toString('ascii'));
+    }
+  }
+  function send_string(str) {
+    const packet = new ax25.Packet();
+    packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui;
+    packet.source = { callsign : 'KM6TIG', ssid : 1 };
+    packet.destination = { callsign : 'KM6TIG', ssid : 2 };
+    packet.payload = Buffer.from(str, 'ascii');
+    tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
+  }
+
   //log_packet();
   process.on('SIGTERM', tnc.close);
   tnc.on('error', console.log);
@@ -43,6 +63,7 @@ router.get('/api/packet', (req, res) => {
           send_string('HI HI OM!');
       }
   );
+
 });
 
 router.get('/api/ham/status', (req, res) => {
@@ -172,26 +193,6 @@ function echoTNC() {
       console.log("HURRRRR! I DONE BORKED! " + err);
     }
   );
-}
-
-function log_packet(data) {
-  const packet = new ax25.Packet();
-  packet.disassemble(data.data);
-  console.log(`Packet received on port ${data.port}`);
-  console.log('Destination:', packet.destination);
-  console.log('Source:', packet.source);
-  console.log('Type:', packet.type_name);
-  if (packet.payload.length > 0) {
-      console.log('Payload:', packet.payload.toString('ascii'));
-  }
-}
-function send_string(str) {
-  const packet = new ax25.Packet();
-  packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui;
-  packet.source = { callsign : 'KM6TIG', ssid : 1 };
-  packet.destination = { callsign : 'KM6TIG', ssid : 2 };
-  packet.payload = Buffer.from(str, 'ascii');
-  tnc.send_data(packet.assemble(), () => console.log('Sent:', str));
 }
 
 
