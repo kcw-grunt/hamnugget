@@ -172,9 +172,19 @@ function echoTNC() {
     }
   );
 }
-
+function log_packet(data) {
+  const packet = new ax25.Packet();
+  packet.disassemble(data.data);
+  console.log(`Packet received on port ${data.port}`);
+  console.log('Destination:', packet.destination);
+  console.log('Source:', packet.source);
+  console.log('Type:', packet.type_name);
+  if (packet.payload.length > 0) {
+      console.log('Payload:', packet.payload.toString('ascii'));
+  }
+}
 function send_string(str) {
-  const packet = new AX25.Packet();
+  const packet = new ax25.Packet();
   packet.type = AX25.Masks.control.frame_types.u_frame.subtypes.ui;
   packet.source = { callsign : 'KM6TIG', ssid : 1 };
   packet.destination = { callsign : 'KM6TIG', ssid : 2 };
