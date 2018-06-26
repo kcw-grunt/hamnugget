@@ -185,7 +185,7 @@ function log_packet(data) {
 }
 function send_string(str) {
   const packet = new ax25.Packet();
-  packet.type = AX25.Masks.control.frame_types.u_frame.subtypes.ui;
+  packet.type = ax25.Masks.control.frame_types.u_frame.subtypes.ui;
   packet.source = { callsign : 'KM6TIG', ssid : 1 };
   packet.destination = { callsign : 'KM6TIG', ssid : 2 };
   packet.payload = Buffer.from(str, 'ascii');
