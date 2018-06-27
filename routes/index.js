@@ -21,22 +21,20 @@ const tnc = new ax25.kissTNC(
   }
 );
 console.log('TNC var set...');
-
-tnc
-
+ 
 router.get('/api/hello', (req, res) => {
 
-  console.log('Hello ?');
-  // device, baud_rate
-
+  console.log('Hello packet send string'); 
 
   function send_string(str) {
 
     const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
-    packet.source = { callsign : 'KM6TIG', ssid : 1 };
-    packet.destination = { callsign : 'KM6TIG', ssid : 2 };
-    packet.payload == Buffer.from(str, 'ascii');
+    packet.sourceCallsign = 'KM6TIG';
+    packet.sourceSSID = '1';
+    packet.destinationCallsign = 'KM6TIG';
+    packet.destinationSSID = '2';
+    packet.infoString == 'HELLO Stupid  test string';
     tnc.send(packet.assemble(), () => console.log('Sent:', str));
   }
   send_string('hello no');
@@ -47,32 +45,20 @@ router.get('/api/packet', (req, res) => {
  
   console.log('TNC Starting....');
   
-  function log_packet(data) {
-    const packet = new ax25.Packet(modulo = 8);
-    packet.disassemble(data.data);
-    console.log(`Packet received on port ${data.port}`);
-    console.log('Destination:', packet.destination);
-    console.log('Source:', packet.source);
-    console.log('Type:', packet.type_name);
-    if (packet.payload.length > 0) {
-        console.log('Payload:', packet.payload.toString('ascii'));
-    }
-  }
+ 
   function send_string(str) {
+
     const packet = new ax25.Packet(modulo = 8);
     packet.type = ax25.Defs.U_FRAME_UI;
-    packet.source = { callsign : 'KM6TIG', ssid : 1 };
-    console.log(packet.source); 
-    packet.destination = { callsign : 'KM6TIG', ssid : 2 }; 
-    console.log(packet.destination); 
-    packet.infoString = str; 
-    console.log('Will send:' + packet.infoString);
-    var frame = packet.assemble(); 
-    tnc.send(frame);
-    console.log('Sent (data):' + frame);
+    packet.sourceCallsign = 'KM6TIG';
+    packet.sourceSSID = '1';
+    packet.destinationCallsign = 'KM6TIG';
+    packet.destinationSSID = '2';
+    packet.infoString == 'HELLO Stupid  test string';
+    tnc.send(packet.assemble(), () => console.log('Sent:', str));
   }
  
-  send_string('Send test hello');
+  send_string('Send test packet');
 
 });
 
