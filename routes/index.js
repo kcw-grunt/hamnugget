@@ -45,7 +45,6 @@ router.get('/api/hello', (req, res) => {
 router.get('/api/packet', (req, res) => {
  
   console.log('TNC Starting....');
-  tnc.
  
   function send_string(str) {
 
