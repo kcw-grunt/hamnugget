@@ -26,6 +26,7 @@ router.get('/api/hello', (req, res) => {
 
   console.log('Hello packet send string'); 
 
+  
   function send_string(str) {
 
     const packet = new ax25.Packet(modulo = 8);
@@ -44,7 +45,7 @@ router.get('/api/hello', (req, res) => {
 router.get('/api/packet', (req, res) => {
  
   console.log('TNC Starting....');
-  
+  tnc.
  
   function send_string(str) {
 
@@ -79,6 +80,55 @@ router.get('/api/frame', (req, res) => {
   )
 });
 
+
+router.get('/api/beacon', (req,res ) => {
+
+    var beacon = function() {
+      var packet = new ax25.Packet(
+        {	sourceCallsign : "MYCALL",
+          destinationCallsign : "BEACON",
+          type: ax25.Defs.U_FRAME_UI,
+          infoString : "Hello world!"
+        }
+      );
+      var frame = packet.assemble();
+      tnc.send(frame);
+      console.log("Beacon sent.");
+    }
+
+    tnc.on(
+      "error",
+      function(err) {
+        console.log(err);
+      }
+    );
+
+    tnc.on(
+      "opened",
+      function() {
+        console.log("TNC opened on " + tnc.serialPort + " at " + tnc.baudRate);
+        setInterval(beacon, 30000); // Beacon every 30 seconds - excessive!
+      }
+    );
+
+    tnc.on(
+      "frame",
+      function(frame) {
+        var packet = new ax25.Packet({ 'frame' : frame });
+        console.log(
+          util.format(
+            "Packet seen from %s-%s to %s-%s.",
+            packet.sourceCallsign,
+            packet.sourceSSID,
+            packet.destinationCallsign,
+            packet.destinationSSID
+          )
+        );
+        if(packet.infoString != "")
+          console.log(packet.infoString);
+      }
+    );
+});
 
 
 router.get('/api/ham/status', (req, res) => {
