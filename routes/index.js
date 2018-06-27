@@ -81,7 +81,7 @@ router.get('/api/frame', (req, res) => {
 
 
 router.get('/api/beacon', (req,res ) => {
-
+    
     var beacon = function() {
       var packet = new ax25.Packet(
         {	sourceCallsign : "MYCALL",
@@ -94,6 +94,8 @@ router.get('/api/beacon', (req,res ) => {
       tnc.send(frame);
       console.log("Beacon sent.");
     }
+
+    beacon();
 
     tnc.on(
       "error",
