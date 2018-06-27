@@ -22,6 +22,8 @@ const tnc = new ax25.kissTNC(
 );
 console.log('TNC var set...');
 
+tnc
+
 router.get('/api/hello', (req, res) => {
 
   console.log('Hello ?');
